@@ -1,7 +1,7 @@
 from flask import Flask, request, abort
 import os
 
-import face_detect
+import face_detect as f
 import base64
 
 from linebot import (
@@ -11,7 +11,7 @@ from linebot.exceptions import (
    InvalidSignatureError
 )
 from linebot.models import (
-   MessageEvent, TextMessage, TextSendMessage, ImageMessage #ImageMessageを追加
+   MessageEvent, TextMessage, TextSendMessage, ImageMessage
 )
 
 app = Flask(__name__)
@@ -43,6 +43,11 @@ def callback():
 
    return 'OK'
 
+@handler.add(MessageEvent, message=TextMessage)
+# テキストの場合はオウム返し
+def handle_message(event):
+   line_bot_api.reply_message(event.reply_token, TextSendMessage(text=event.message.text))
+
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
    push_img_id = event.message.id # 投稿された画像IDを取得
@@ -57,4 +62,4 @@ def handle_image_message(event):
 if __name__ == "__main__":
    #    app.run()
    port = int(os.getenv("PORT"))
-   app.run(host="0.0.0.0", port=5000)
+   app.run(host="0.0.0.0", port=port)
