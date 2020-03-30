@@ -1,7 +1,7 @@
 from flask import Flask, request, abort
 import os
 
-import face_detect as f
+import face_detect as f  # face_detect.py
 import base64
 
 from linebot import (
@@ -11,7 +11,7 @@ from linebot.exceptions import (
    InvalidSignatureError
 )
 from linebot.models import (
-   MessageEvent, TextMessage, TextSendMessage, ImageMessage
+   MessageEvent, TextMessage, TextSendMessage, ImageMessage #ImageMessageを追加
 )
 
 app = Flask(__name__)
@@ -21,6 +21,10 @@ LINE_CHANNEL_SECRET = os.environ["315660cf2ecbe83901a2cb137a82286c"]
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
+
+@app.route("/")
+def hello_world():
+   return "hello world!"
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -35,28 +39,27 @@ def callback():
    try:
        handler.handle(body, signature)
    except InvalidSignatureError:
-       print("Invalid signature. Please check your channel access token/channel secret.")
        abort(400)
 
    return 'OK'
 
 @handler.add(MessageEvent, message=TextMessage)
+# テキストの場合はオウム返し
 def handle_message(event):
-   line_bot_api.reply_message(
-       event.reply_token,
-       TextSendMessage(text=event.message.text))
+   line_bot_api.reply_message(event.reply_token, TextSendMessage(text=event.message.text))
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
-    push_img_id = event.message.id
-    message_content = line_bot_api.get_message_content(push_img_id)
-    push_img = b""
-    for chunk in message_content.iter_content():
-        push_img += chunk
-    push_img = base64.b64encode(push_img)
-    msg = f.face_detect(push_img)
-    line_bot_apireplay_message(event.replay_token, TextMessage(text=msg))
+   push_img_id = event.message.id # 投稿された画像IDを取得
+   message_content = line_bot_api.get_message_content(push_img_id) # LINEサーバー上に自動保存された画像を取得
+   push_img = b""
+   for chunk in message_content.iter_content(): 
+       push_img += chunk #画像をiter_contentでpush_imgに順次代入
+   push_img = base64.b64encode(push_img) # APIに通すためbase64エンコード
+   msg = f.face_detect(push_img)
+   line_bot_api.reply_message(event.reply_token, TextSendMessage(text=msg))
 
 if __name__ == "__main__":
+   #    app.run()
    port = int(os.getenv("PORT"))
    app.run(host="0.0.0.0", port=port)
