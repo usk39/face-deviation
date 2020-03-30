@@ -43,11 +43,6 @@ def callback():
 
    return 'OK'
 
-@handler.add(MessageEvent, message=TextMessage)
-# テキストの場合はオウム返し
-def handle_message(event):
-   line_bot_api.reply_message(event.reply_token, TextSendMessage(text=event.message.text))
-
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image_message(event):
    push_img_id = event.message.id # 投稿された画像IDを取得
@@ -55,11 +50,11 @@ def handle_image_message(event):
    push_img = b""
    for chunk in message_content.iter_content(): 
        push_img += chunk #画像をiter_contentでpush_imgに順次代入
-       push_img = base64.b64encode(push_img) # APIに通すためbase64エンコード
-       msg = f.face_detect(push_img)
-       line_bot_api.reply_message(event.reply_token, TextSendMessage(text=msg))
+   push_img = base64.b64encode(push_img) # APIに通すためbase64エンコード
+   msg = f.face_detect(push_img)
+   line_bot_api.reply_message(event.reply_token, TextSendMessage(text=msg))
 
 if __name__ == "__main__":
    #    app.run()
    port = int(os.getenv("PORT"))
-   app.run(host="0.0.0.0", port=port)
+   app.run(host="0.0.0.0", port=5000)
