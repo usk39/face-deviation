@@ -1,7 +1,7 @@
 from flask import Flask, request, abort
 import os
 
-import face_detect as f  # face_detect.py
+import face_detect
 import base64
 
 from linebot import (
