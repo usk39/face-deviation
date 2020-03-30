@@ -16,8 +16,8 @@ from linebot.models import (
 
 app = Flask(__name__)
 
-LINE_CHANNEL_ACCESS_TOKEN = os.environ["s9AE+LBqzO9r1IUgX0ddKNkYglQ9xIz9XS3XFoHDd/DnPrDQTi2wt0wKB5yY9YmWxkhgVECpgPVLngUc25oEyjH37Zh/lqxmbsL6FzM6w4VG+LfNSbnNu9iASOUsM1gRN6TDYxleNN0cn1NrPdsxGQdB04t89/1O/w1cDnyilFU="]
-LINE_CHANNEL_SECRET = os.environ["315660cf2ecbe83901a2cb137a82286c"]
+LINE_CHANNEL_ACCESS_TOKEN = os.environ["LINE_CHANNEL_ACCESS_TOKEN"]
+LINE_CHANNEL_SECRET = os.environ["LINE_CHANNEL_SECRET"]
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
