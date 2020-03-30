@@ -2,8 +2,7 @@ import requests
 
 def face_detect(image):
     url = "https://api-us.faceplusplus.com/facepp/v3/detect"
-    payload = {'api_key': 'asSoIfhU0szCMOX6sRTphEbFdYsnIuHG', 'api_secret': 'wEstQuIjvgfpvpPd4o9UyteR_VDl9BPt',\
-               'image_base64': image, 'return_attributes': 'gender,age,ethnicity,beauty'}
+    payload = {'api_key': 'asSoIfhU0szCMOX6sRTphEbFdYsnIuHG', 'api_secret': 'wEstQuIjvgfpvpPd4o9UyteR_VDl9BPt','image_base64': image, 'return_attributes': 'gender,age,ethnicity,beauty'}
 
     try:
         r = requests.post(url, data=payload)
@@ -36,4 +35,3 @@ def face_detect(image):
         return msg
     except:
         return "サーバーの接続に失敗したか画像を正しく認識できませんでした。"
-    
